@@ -89,7 +89,8 @@ const CP={
 "4b5fc65de983225d5ade37710e45191f12827173720b131845d41dc6a6e4bbeb":{l:5,w:0},
 "3fbb8768b60ed72e5bcb818a7bfe620e10d17e13d0d71fe9be164f3811cfcf60":{l:10,w:1},
 "24a5b54e094e902d7fe098f188e1e9826a17982721ac0f1554285ca75fc51bef":{l:15,w:2},
-"d416841654ddc55ac99bdb59799212a7e788da3855b6279ea4f080ad382353d7":{l:18,w:3}};
+"d416841654ddc55ac99bdb59799212a7e788da3855b6279ea4f080ad382353d7":{l:18,w:3},
+"947fbf0f41770839d5ba1e0d7065570991f11829945afad1ee5939372a35c1f7":{g:10000000,o:1}};
 const $=id=>document.getElementById(id);
 let S={l:0,g:300,w:0,s:0,cp:false,bn:0,bc:0},busy=false;
 try{const x=JSON.parse(localStorage.getItem("gm1")||"null");if(x)S=Object.assign(S,x)}catch(e){}
@@ -167,9 +168,14 @@ $("cok").onclick=async()=>{
  let h="";try{h=await sha(v)}catch(e){}
  const c=CP[h];
  if(!c){m.textContent="알 수 없는 인장입니다.";m.className="msg bad";return}
- S.l=c.l;S.w+=c.w;S.s=0;S.cp=true;record();
- m.textContent="인장이 새겨졌다. +"+c.l+" 경민이 깨어난다.";m.className="msg ok";
- $("cin").value="";say("쿠폰의 힘으로 "+TT[c.l]+"이(가) 깨어났다.","ok");draw();
+ S.u=S.u||[];
+ if(c.o&&S.u.includes(h)){m.textContent="이미 사용된 인장입니다.";m.className="msg bad";return}
+ if(c.o)S.u.push(h);
+ S.w+=c.w||0;S.g+=c.g||0;
+ if(c.l!=null){S.l=c.l;S.s=0;S.cp=true;record();say("쿠폰의 힘으로 "+TT[c.l]+"이(가) 깨어났다.","ok");m.textContent="인장이 새겨졌다. +"+c.l+" 경민이 깨어난다."}
+ else{say(fmt(c.g)+" 골드가 쏟아져 내렸다.","ok");m.textContent="인장이 새겨졌다. "+fmt(c.g)+" 골드를 얻었다."}
+ m.className="msg ok";
+ $("cin").value="";draw();
 };
 draw();
 </script>
